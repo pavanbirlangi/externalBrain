@@ -1,0 +1,58 @@
+1. Project Concept
+The External Brain is a hybrid productivity system designed to solve "mental load" failure. It bridges the gap between passive planning (writing tasks down) and active execution (actually doing them).
+Unlike a standard To-Do list that sits quietly in an app, this project acts as a persistent personal assistant that uses "Smart Nagging" logic to ensure consistency in fitness, diet, and work.
+
+2. The Final Tech Stack
+To ensure the project remains 100% Free and Always-On, we are using a Serverless Hybrid Architecture:
+Component
+Technology
+Role
+User Interface
+Telegram Bot
+The primary interaction point for alerts, quick-logging, and snooze actions.
+Command Center
+Next.js (Vercel)
+A web dashboard (Telegram Mini App) for visual planning and habit history.
+The Memory
+AWS DynamoDB
+A NoSQL database that stores tasks and streaks (Always-Free Tier).
+The Brain
+AWS Lambda
+The serverless logic that processes messages and manages "Snooze" timers.
+The Alarm Clock
+AWS EventBridge
+The 24/7 scheduler that triggers reminders at exact times.
+
+
+3. Detailed Project Workflow
+Phase 1: The Planning (User $\rightarrow$ Next.js)
+Input: You open the dashboard and add a task (e.g., "Buy Chicken") or a daily habit (e.g., "10k Steps").
+Sync: Next.js saves this to DynamoDB.
+Schedule: An AWS Lambda is triggered to create an EventBridge "One-Time" Schedule for the reminder time.
+Phase 2: The Active Nag (AWS $\rightarrow$ User)
+Trigger: At exactly 4:00 PM, EventBridge wakes up the Lambda.
+Alert: Lambda sends a Telegram message: "Time for a walk? 🚶‍♂️" with three buttons: [Done], [Snooze 1hr], [Skip].
+The "Chase" (No Response): If you don't click anything within 15 minutes, the Lambda triggers again to send a follow-up "Urgent" ping.
+Phase 3: The Log (User $\rightarrow$ Telegram)
+Action: You tap [Done].
+Update: Telegram hits the AWS Webhook, which updates DynamoDB and cancels any future "Nag" alerts for that task.
+Feedback: The bot sends a confirmation: "Goal logged! 🔥 Current streak: 5 days."
+
+4. Key Features to Implement
+✅ The "Morning Contract" (8:00 AM)
+A daily automated message that lists your "Must-Dos" and asks you to commit to the most important one. You cannot see other tasks until that "Priority" task is done.
+🔄 The "Smart Snooze"
+When you hit "Snooze," the system doesn't just forget. It dynamically recalculates the remindAt timestamp in DynamoDB and sets a new EventBridge alarm.
+🍗 Logistic Reminders
+Special logic for location-based or inventory tasks. If "Buy Chicken" isn't checked by 7:00 PM (store closing time proximity), the bot's tone changes to "Alert Mode" to prevent you from missing your meal prep.
+📊 Consistency Heatmap
+A visual grid on your Next.js dashboard that turns green when you hit all daily habits (Steps, Water, Protein) and red when you miss them.
+
+5. Deployment Checklist
+Telegram: Create bot via @BotFather and get the BOT_TOKEN.
+AWS: * Create DynamoDB table PersonalAssistant_Tasks.
+Set up IAM Policy for Lambda to access DynamoDB and EventBridge.
+Vercel: * Deploy Next.js app.
+Link AWS environment variables (AWS_ACCESS_KEY, AWS_SECRET).
+Integration: Set the Telegram Webhook to point to your AWS Lambda URL.
+

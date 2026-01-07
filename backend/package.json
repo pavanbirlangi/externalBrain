@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "This directory contains the serverless logic for the External Brain project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@aws-sdk/client-apigatewayv2": "^3.964.0",
+    "@aws-sdk/client-cloudwatch-logs": "^3.964.0",
+    "@aws-sdk/client-dynamodb": "^3.964.0",
+    "@aws-sdk/client-eventbridge": "^3.964.0",
+    "@aws-sdk/client-iam": "^3.964.0",
+    "@aws-sdk/client-lambda": "^3.964.0",
+    "@aws-sdk/lib-dynamodb": "^3.964.0",
+    "adm-zip": "^0.5.16",
+    "dotenv": "^17.2.3"
+  }
+}
