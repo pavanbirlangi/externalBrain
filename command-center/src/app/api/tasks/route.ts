@@ -22,6 +22,15 @@ const docClient = DynamoDBDocumentClient.from(dbClient);
 const TABLE_NAME = process.env.DYNAMODB_TABLE_NAME || 'PersonalAssistant_Tasks';
 const TASK_SCHEDULER_ARN = process.env.TASK_SCHEDULER_ARN;
 
+// Debug Log for Environment
+console.log('--- API Route Init ---');
+console.log('Region:', process.env.AWS_REGION);
+console.log('Table:', TABLE_NAME);
+console.log('Scheduler ARN:', TASK_SCHEDULER_ARN);
+console.log('Access Key Present:', !!process.env.AWS_ACCESS_KEY_ID);
+console.log('Secret Key Present:', !!process.env.AWS_SECRET_ACCESS_KEY);
+console.log('----------------------');
+
 // Helper to get start/end of day
 function getDayRange(dateStr: string) {
     const start = new Date(dateStr);
@@ -33,6 +42,7 @@ function getDayRange(dateStr: string) {
 
 export async function GET(request: Request) {
     try {
+        console.log('GET /api/tasks called');
         const { searchParams } = new URL(request.url);
         const dateParam = searchParams.get('date');
         const userId = '1069945118'; // Hardcoded for MVP
@@ -179,7 +189,7 @@ export async function POST(request: Request) {
         return Response.json({ success: true });
     } catch (error) {
         console.error('Error scheduling task:', error);
-        return Response.json({ error: 'Failed to schedule task' }, { status: 500 });
+        return Response.json({ error: 'Failed to schedule task: ' + (error as Error).message }, { status: 500 });
     }
 }
 
